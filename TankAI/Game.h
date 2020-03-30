@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "Tank.h"
 #include "Bullet.h"
+#include "NeuralNetwork.h"
 
 #include <cmath>
 #include <string>
@@ -14,7 +15,6 @@
 class Game
 {
 private:
-
 	ALLEGRO_DISPLAY *display;
 	float FPS = 10.0f;
 	bool done = false;

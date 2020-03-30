@@ -16,8 +16,9 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::draw(int x, int y, float velocity, float angle, double gravity, Target *target)
+bool Bullet::draw(int x, int y, float velocity, float angle, double gravity, Target *target)
 {
+	bool hitTheTarget = false;
 	isHere = true;//po naciœniêciu spacji pocisk staje siê aktywny
 
 	//pêtla wyœwietlaj¹ca po pixelu trajektoriê lotu
@@ -35,6 +36,7 @@ void Bullet::draw(int x, int y, float velocity, float angle, double gravity, Tar
 		//wykrywanie kolizji
 		if (target->getX() == i && (target->getY() < this->y && (60 + target->getY()) > this->y))
 		{
+			hitTheTarget = true;
 			target->createNew();//po wykryciu kolizji generujê now¹ tarczê strzelnicz¹
 			score += 10;//zwiêkszam wynik
 			isHere = false;
@@ -43,6 +45,7 @@ void Bullet::draw(int x, int y, float velocity, float angle, double gravity, Tar
 	}
 	isHere = false;
 	
+	return hitTheTarget;
 }
 
 void Bullet::destroy()

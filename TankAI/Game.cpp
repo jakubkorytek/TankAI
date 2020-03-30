@@ -113,10 +113,12 @@ void Game::gameLoop()
 		al_get_keyboard_state(&keyState);
 		degree = (tank.getAngle()*180)/pi;//przypisanie k¹ta lufy czo³gu i przeliczenie na stopnie
 
+
 		//Obs³uga klawiatury
 		if (input.isKeyPressed(ev, ALLEGRO_KEY_ESCAPE))//warunek wyjœcia
 			done = true;
 		else if (input.isKeyPressed(ev, ALLEGRO_KEY_W))
+		//else if (action == 0)
 		{
 			degree -= 5;
 			if (degree < -75)//biblioteka allegro obraca obiekty w ich praw¹ stronê czyli na logikê nasze 90 stopni to -90 dla biblioteki
@@ -125,6 +127,7 @@ void Game::gameLoop()
 			barrelX = tank.getBarrelWidth()* cos((degree*pi) / -180);//145 to szerokoœæ grafiki lufy, 0.8 to jej skalowanie do rysowania
 		}
 		else if (input.isKeyPressed(ev, ALLEGRO_KEY_S))
+		//else if (action == 1)
 		{
 			degree += 5;
 			if (degree > 0)
@@ -133,18 +136,21 @@ void Game::gameLoop()
 			barrelX = tank.getBarrelWidth()* cos((degree*pi) / -180);//145 to szerokoœæ grafiki lufy, 0.8 to jej skalowanie do rysowania
 		}
 		else if (input.isKeyPressed(ev, ALLEGRO_KEY_D))
+		//else if (action == 2)
 		{
 			power += 1;//zmiana wartoœci si³y wystrza³u
 			if (power > 12)
 				power = 12;
 		}
 		else if (input.isKeyPressed(ev, ALLEGRO_KEY_A))
+		//else if (action == 3)
 		{
 			power -= 1;//zmiana wartoœci si³y wystrza³u
 			if (power < 1)
 				power = 1;
 		}
 		else if (input.isKeyPressed(ev, ALLEGRO_KEY_SPACE))
+		//else if (action == 4)
 		{
 			if (!bullet.hello())//jeœli pocisk nie istnieje to zostanie wystrzelony, dziêki temu nie wystrzelê kilku pocisków na raz, w koñcu to czo³g a nie karabin :)
 			{

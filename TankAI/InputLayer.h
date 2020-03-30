@@ -1,50 +1,53 @@
 #pragma once
+
+#include <vector>
 #include <iostream>
+#include "MathUtils.h"
+using namespace std;
 
-#include "Layer.h"
-
-class InputLayer : public Layer
+class InputLayer
 {
 public:
-	InputLayer() {};
-	~InputLayer() {};
+	InputLayer();
+	~InputLayer();
 
-	InputLayer& initLayer(InputLayer& inputLayer);
-	void printLayer(InputLayer& inputLayer);
+	vector<double> inputValues;
 
+	vector<double> calculateLayerOutputData();
+	void feedInput(vector<double> inputValues);
+	void printInputLayer();
 private:
 
 };
 
-inline InputLayer& InputLayer::initLayer(InputLayer& inputLayer) {
-	std::vector<double> listOfWeightInTemp;
-	std::vector<Neuron> listOfNeurons;
-
-	for (size_t i = 0; i < inputLayer.numberOfNeuronInLayer; i++) {
-		Neuron neuron;
-		listOfWeightInTemp.push_back(neuron.initNeuron());
-
-		neuron.listOfWeightIn = listOfWeightInTemp;
-		listOfNeurons.push_back(neuron);
-
-		listOfWeightInTemp.clear();
-	}
-
-	inputLayer.listOfNeurons = listOfNeurons;
-	return inputLayer;
+inline InputLayer::InputLayer()
+{
 }
 
-inline void InputLayer::printLayer(InputLayer & inputLayer)
+inline InputLayer::~InputLayer()
 {
-	std::cout << "### INPUT LAYER ###" << std::endl;
-	int n = 1;
-	for (Neuron& neuron : inputLayer.listOfNeurons) {
-		std::cout << "Neuron #" << n << ":" << std::endl;
-		std::cout << "Input Weights:" << std::endl;
-		std::vector<double> weights = neuron.listOfWeightIn;
-		for (double weight : weights) {
-			std::cout << weight << std::endl;
-		}
-		n++;
+}
+
+inline vector<double> InputLayer::calculateLayerOutputData()
+{
+	for (int i = 0; i < this->inputValues.size();++i)
+	{
+		this->inputValues[i] = MathUtils::sigmoid(this->inputValues[i]);
 	}
+	return this->inputValues;
+}
+
+inline void InputLayer::feedInput(vector<double> inputValues)
+{
+	this->inputValues = inputValues;
+}
+
+inline void InputLayer::printInputLayer()
+{
+	cout << " INPUT LAYER " << endl << endl;
+	for (int i = 0;i < this->inputValues.size();++i)
+	{
+		cout << " Value " << i << " : " << this->inputValues[i] << endl;
+	}
+	cout << endl;
 }

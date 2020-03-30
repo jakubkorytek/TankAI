@@ -1,23 +1,59 @@
 #pragma once
-#include <stdlib.h>
 #include <vector>
+#include <iostream>
+#include <ctime>
+#include <stdlib.h>
 
 using namespace std;
 
 class Neuron
 {
 public:
-	Neuron() {};
-	~Neuron() {};
+	Neuron(int numberOfConnections);
+	~Neuron();
 
-	double initNeuron() { return ((double)rand()) / RAND_MAX; }
-
-	vector<double> listOfWeightIn;
-	vector<double> listOfWeightOut;
-	double outputValue;
 	double error;
-	double sensibility;
+	double outputValue;
+	
+	vector<double> weightsIn;
+
+	double calculateOutputValue(vector<double> inputs);
+	void printNeuron();
 
 private:
 
 };
+
+inline Neuron::Neuron(int numberOfConnections)
+{
+	for (int i = 0; i < numberOfConnections; ++i)
+	{
+		weightsIn.push_back((double)rand() / (RAND_MAX));
+	}
+	error = 0;
+}
+
+inline Neuron::~Neuron()
+{
+}
+
+inline double Neuron::calculateOutputValue(vector<double> inputs)
+{
+	double tempOutputValue = 0.0;
+
+	for (int i = 0;i < inputs.size();++i)
+	{
+		tempOutputValue += inputs[i] * weightsIn[i];
+	}
+
+	this->outputValue = tempOutputValue;
+	return this->outputValue;
+}
+
+inline void Neuron::printNeuron()
+{
+	for (int i = 0; i < weightsIn.size();++i)
+	{
+		cout << "W" << i << " : " << weightsIn[i] << " ";
+	}
+}

@@ -1,4 +1,0 @@
-#pragma once
-
-enum TrainingTypesENUM { PERCEPTRON, ADALINE, BACKPROPAGATION, LEVENBERG_MARQUARDT };
-enum ActivationENUM { LINAR = 0, SIGLOG = 1, HYPERTAN = 2, STEP = 3 };
