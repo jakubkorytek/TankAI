@@ -10,14 +10,16 @@ using namespace std;
 class Neuron
 {
 public:
-	Neuron(int numberOfConnections, double bias);
+	Neuron(int numberOfConnections);
 	~Neuron();
 
-	double bias;
 	double error;
+	double gamma;
 	double outputValue;
 	
 	vector<double> weightsIn;
+	vector<double> weightsDelta;
+
 
 	double calculateOutputValue(vector<double> inputs);
 	void printNeuron();
@@ -26,14 +28,14 @@ private:
 
 };
 
-inline Neuron::Neuron(int numberOfConnections, double bias)
+inline Neuron::Neuron(int numberOfConnections)
 {
 	for (int i = 0; i < numberOfConnections; ++i)
 	{
 		weightsIn.push_back(((double)rand() / (RAND_MAX))-0.5);
+		weightsDelta.push_back(0);
 	}
 	this->error = 0;
-	this->bias = bias;
 }
 
 inline Neuron::~Neuron()
@@ -42,13 +44,13 @@ inline Neuron::~Neuron()
 
 inline double Neuron::calculateOutputValue(vector<double> inputs)
 {
-	double tempOutputValue = this->bias;
+	double tempOutputValue = 0;
 
 	for (int i = 0;i < inputs.size();++i)
 	{
 		tempOutputValue += inputs[i] * weightsIn[i];
 	}
-	this->outputValue = MathUtils::sigmoid(tempOutputValue);
+	this->outputValue = tanh(tempOutputValue);
 	return this->outputValue;
 }
 

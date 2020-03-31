@@ -12,7 +12,7 @@ public:
 	~TrainingData();
 
 	vector<double> inputs;
-	double output;
+	vector<double> output;
 
 private:
 
@@ -21,7 +21,7 @@ private:
 inline TrainingData::TrainingData(vector<double> inputs, double output)
 {
 	this->inputs = inputs;
-	this->output = output;
+	this->output.push_back(output);
 }
 
 inline TrainingData::~TrainingData()

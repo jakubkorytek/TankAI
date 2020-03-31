@@ -130,7 +130,6 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="TrainingData.h" />
-    <ClInclude Include="InputLayer.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="MathUtils.h" />

@@ -9,16 +9,16 @@ class Layer
 {
 public:
 	Layer(int numberOfNeuronsInLayer, int numberOfLayerInputs);
-	Layer();
-	~Layer();
+	Layer() {};
+	~Layer() {};
 
 	vector<Neuron> listOfNeurons;
 	vector<double> layerInputs;
 	vector<double> layerOutputs;
 
-	int bias;
-
-	vector<double> calculateLayerOutputData(vector<double> layerInputs);
+	vector<double> feedForward(vector<double> layerInputs);
+	void backPropagateOutput(vector<double> expected);
+	void backPropagateHidden(vector<Neuron> layerForward);
 	void printLayer();
 
 private:
@@ -27,35 +27,65 @@ private:
 
 inline Layer::Layer(int numberOfNeuronsInLayer, int numberOfLayerInputs)
 {
-	this->bias = numberOfNeuronsInLayer;
-
 	for (int i = 0;i < numberOfNeuronsInLayer;++i)
 	{
-		Neuron neuron(numberOfLayerInputs, bias);
+		Neuron neuron(numberOfLayerInputs);
 		this->listOfNeurons.push_back(neuron);
 	}
 }
 
-inline Layer::Layer()
+inline vector<double> Layer::feedForward(vector<double> layerInputs)
 {
-}
-
-inline Layer::~Layer()
-{
-}
-
-inline vector<double> Layer::calculateLayerOutputData(vector<double> layerInputs)
-{
-	vector<double> tempLayerOutputs;
+	layerOutputs.clear();
 	this->layerInputs = layerInputs;
-	for (vector<Neuron>::iterator neuron = listOfNeurons.begin();neuron != listOfNeurons.end();neuron++)
+	for (int i=0; i < listOfNeurons.size(); i++)
 	{
-		double outputValue = MathUtils::sigmoid(neuron->calculateOutputValue(layerInputs));
-		neuron->outputValue = outputValue;
-		tempLayerOutputs.push_back(outputValue);
+		listOfNeurons[i].calculateOutputValue(layerInputs);
+		layerOutputs.push_back(listOfNeurons[i].outputValue);
 	}
-	this->layerOutputs = tempLayerOutputs;
-	return this->layerOutputs;
+	return layerOutputs;
+}
+
+inline void Layer::backPropagateOutput(vector<double> expected)
+{
+	for (int i = 0; i < listOfNeurons.size(); i++)
+	{
+		listOfNeurons[i].error = listOfNeurons[i].outputValue - expected[i];
+	}
+
+	for (int i = 0; i < listOfNeurons.size(); i++)
+	{
+		listOfNeurons[i].gamma = listOfNeurons[i].error * MathUtils::derivativeTanh(listOfNeurons[i].outputValue);
+	}
+
+	for (int i = 0; i < listOfNeurons.size(); i++)
+	{
+		for (int j = 0; j < layerInputs.size(); j++)
+		{
+			listOfNeurons[i].weightsDelta[j] = listOfNeurons[i].gamma * layerInputs[j];
+		}
+	}
+}
+
+inline void Layer::backPropagateHidden(vector<Neuron> layerForward)
+{
+	for (int i = 0; i < listOfNeurons.size(); i++)
+	{
+		listOfNeurons[i].gamma = 0;
+		for (int j = 0; j < layerForward.size(); j++)
+		{
+			listOfNeurons[i].gamma += layerForward[j].gamma * layerForward[j].weightsIn[i];
+		}
+		listOfNeurons[i].gamma *= tanh(listOfNeurons[i].outputValue);
+	}
+
+	for (int i = 0; i < listOfNeurons.size();i++)
+	{
+		for (int j = 0; j < layerInputs.size(); j++)
+		{
+			listOfNeurons[i].weightsDelta[j] = listOfNeurons[i].gamma * layerInputs[j];
+		}
+	}
 }
 
 inline void Layer::printLayer()

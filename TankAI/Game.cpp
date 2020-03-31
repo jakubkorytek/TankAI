@@ -166,11 +166,11 @@ void Game::gameLoop(NeuralNetwork neuralNetwork)
 				};
 				TrainingData trainingData(inputs, hitTheTarget ? 1.0 : 0.0);
 				trainingDatas.push_back(trainingData);
+				neuralNetwork.train(trainingDatas);
 			}	
 		}
 		else if (input.isKeyPressed(ev, ALLEGRO_KEY_B))
 		{
-			cout << "B PRESSED NIECH AI PRZEJMUJE ŒWIAT" << endl;
 			neuralNetwork.train(trainingDatas);
 			neuralNetwork.printNeuralNetwork();
 		}
