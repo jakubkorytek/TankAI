@@ -30,7 +30,7 @@ inline Neuron::Neuron(int numberOfConnections, double bias)
 {
 	for (int i = 0; i < numberOfConnections; ++i)
 	{
-		weightsIn.push_back((double)rand() / (RAND_MAX));
+		weightsIn.push_back(((double)rand() / (RAND_MAX))-0.5);
 	}
 	this->error = 0;
 	this->bias = bias;
@@ -48,7 +48,6 @@ inline double Neuron::calculateOutputValue(vector<double> inputs)
 	{
 		tempOutputValue += inputs[i] * weightsIn[i];
 	}
-
 	this->outputValue = MathUtils::sigmoid(tempOutputValue);
 	return this->outputValue;
 }

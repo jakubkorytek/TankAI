@@ -10,6 +10,8 @@ public:
 
 	static double deriverateSigmoid(double y) { return y * (1 - y); }
 
+	static double derivativeTanh(double x) { return 1 - (x * x); }
+
 private:
 
 };

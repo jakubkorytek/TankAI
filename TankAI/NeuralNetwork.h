@@ -15,12 +15,14 @@ public:
 	vector<Layer> listOfHiddenLayers;
 	Layer outputLayer;
 	
-	double learningRate = 0.001;
+	
+	double learningRate = 0.2;
 
 	void printNeuralNetwork();
 	double guessResult(vector<double> inputs);
 	void train(vector<TrainingData> trainingSet);
-	void backpropagate(double error, vector<double> weights, double output, vector<double> inputs);
+	vector<double> backPropagateOutput(double expected);
+	void backPropagateHidden(double error, vector<double> weights, double output, vector<double> inputs);
 
 private:
 
@@ -75,7 +77,7 @@ inline double NeuralNetwork::guessResult(vector<double> inputs)
 		//First hidden layer needs data from input layer
 		if (i == 0)
 		{
-			vector<double> inputLayerOutputs = this->inputLayer.calculateLayerOutputData();
+			vector<double> inputLayerOutputs = this->inputLayer.inputValues;
 			previousLayerOutputs = this->listOfHiddenLayers[i].calculateLayerOutputData(inputLayerOutputs);
 		}
 		//next hidden layers take data from previous hidden layer
@@ -96,14 +98,32 @@ inline void NeuralNetwork::train(vector<TrainingData> trainingSet)
 		
 		double output = this->guessResult(trainingData->inputs);
 		cout << "OUTPUT : " << output << endl;
-		double error = pow(trainingData->output - output, 2) / 2;
-		this->outputLayer.listOfNeurons[0].error = error;
-		this->backpropagate(error, this->outputLayer.listOfNeurons[0].weightsIn, output,  trainingData->inputs);
-		this->printNeuralNetwork();
+		double error = trainingData->output - output;
+		cout << "ERROR : " << error << endl;
+		//vector<double> weightsDelta = backPropagateOutput(trainingData->output)
+		this->backPropagateHidden(error, this->outputLayer.listOfNeurons[0].weightsIn, trainingData->output,  trainingData->inputs);
+		cout << "AFTER TRAINING : " << endl;
+		output = this->guessResult(trainingData->inputs);
+		cout << "OUTPUT : " << output << endl;
+
+		cout << "------------------------------------------------------------------------------" << endl;
 	}
 }
 
-inline void NeuralNetwork::backpropagate(double error, vector<double> weights, double output, vector<double> inputs)
+inline vector<double> NeuralNetwork::backPropagateOutput(double expected)
+{
+	double error = this->outputLayer.layerOutputs[0];
+	double gamma = error * MathUtils::derivativeTanh(error);
+	vector<double> weightsDelta;
+
+	for (int i = 0; i < this->inputLayer.inputValues.size(); i++)
+	{
+		weightsDelta.push_back(gamma * this->inputLayer.inputValues[i]);
+	}
+	return weightsDelta;
+}
+
+inline void NeuralNetwork::backPropagateHidden(double error, vector<double> weights, double output, vector<double> inputs)
 {
 	vector<Neuron> secondLayer;
 	vector<Neuron> firstLayer;
@@ -125,28 +145,24 @@ inline void NeuralNetwork::backpropagate(double error, vector<double> weights, d
 			}
 		}
 	}
-	vector<Neuron> tempHiddenLayer2;
-	vector<Neuron> tempHiddenLayer1;
 
 	for (vector<Neuron>::iterator hiddenNeuron2 = secondLayer.begin();hiddenNeuron2 != secondLayer.end();hiddenNeuron2++)
 	{
 		hiddenNeuron2->error =  error * MathUtils::deriverateSigmoid(hiddenNeuron2->outputValue);
 		for (int weight_x = 0; weight_x < hiddenNeuron2->weightsIn.size(); weight_x++)
 		{
-			weight_x += learningRate * hiddenNeuron2->error*firstHiddenLayerOutputs[weight_x];
+			hiddenNeuron2->weightsIn[weight_x] += learningRate * hiddenNeuron2->error*firstHiddenLayerOutputs[weight_x];
 		}
-		tempHiddenLayer2.push_back(*hiddenNeuron2);
 		for (vector<Neuron>::iterator hiddenNeuron1 = firstLayer.begin();hiddenNeuron1 != firstLayer.end();hiddenNeuron1++)
 		{
 			hiddenNeuron1->error += hiddenNeuron2->error * MathUtils::deriverateSigmoid(hiddenNeuron1->outputValue);
 			for (int weight_z = 0; weight_z < hiddenNeuron1->weightsIn.size(); weight_z++)
 			{
-				weight_z += learningRate * hiddenNeuron1->error* inputs[weight_z];
+				hiddenNeuron1->weightsIn[weight_z] += learningRate * hiddenNeuron1->error* inputs[weight_z];
 			}
-			tempHiddenLayer1.push_back(*hiddenNeuron1);
 		}
 	}
-	this->listOfHiddenLayers[0].listOfNeurons = tempHiddenLayer1;
-	this->listOfHiddenLayers[1].listOfNeurons = tempHiddenLayer2;
+	this->listOfHiddenLayers[0].listOfNeurons = firstLayer;
+	this->listOfHiddenLayers[1].listOfNeurons = secondLayer;
 }
 

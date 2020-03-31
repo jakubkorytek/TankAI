@@ -98,7 +98,7 @@ void Game::gameLoop(NeuralNetwork neuralNetwork)
 	display = al_create_display(1600, 600);//tworzenie okna 1600x600
 	al_set_window_title(display, "Tank");
 	tank.setDisplay(display);
-	FPS = 10.0f;//zmienna do konfiguracji iloœci FPS
+	FPS = 30.0f;//zmienna do konfiguracji iloœci FPS
 	done = false;
 
 	timer = al_create_timer(1.0f / FPS);//kontrola fps
@@ -166,149 +166,13 @@ void Game::gameLoop(NeuralNetwork neuralNetwork)
 				};
 				TrainingData trainingData(inputs, hitTheTarget ? 1.0 : 0.0);
 				trainingDatas.push_back(trainingData);
-				neuralNetwork.train(trainingDatas);
 			}	
 		}
 		else if (input.isKeyPressed(ev, ALLEGRO_KEY_B))
 		{
 			cout << "B PRESSED NIECH AI PRZEJMUJE ŒWIAT" << endl;
 			neuralNetwork.train(trainingDatas);
-			if (!isNeuralNetworkReady)
-				isNeuralNetworkReady = true;
-			else
-				isNeuralNetworkReady = false;
-		}
-
-		if (isNeuralNetworkReady)
-		{
-			vector<double> results;
-			vector<double> inputs{
-				tank.getBarrelX() + barrelX ,
-				tank.getBarrelY() - barrelY ,
-				(double)power,
-				((degree*pi) / -180) ,
-				gravity,
-				(double)target.getX(),
-				(double)target.getY(),
-				targetHeight,
-				1600,
-				600
-			};
-			results.push_back(neuralNetwork.guessResult(inputs));
-			cout << results[0] << endl;
-			vector<double> inputs1{
-				tank.getBarrelX() + barrelX ,
-				tank.getBarrelY() - barrelY ,
-				(double)power+1,
-				((degree*pi) / -180) ,
-				gravity,
-				(double)target.getX(),
-				(double)target.getY(),
-				targetHeight,
-				1600,
-				600
-			};
-			results.push_back(neuralNetwork.guessResult(inputs1));
-			cout << results[1] << endl;
-			vector<double> inputs2{
-				tank.getBarrelX() + barrelX ,
-				tank.getBarrelY() - barrelY ,
-				(double)power-1,
-				((degree*pi) / -180) ,
-				gravity,
-				(double)target.getX(),
-				(double)target.getY(),
-				targetHeight,
-				1600,
-				600
-			};
-			results.push_back(neuralNetwork.guessResult(inputs2));
-			cout << results[2] << endl;
-			double tempDegree = degree;
-			tempDegree -= 5;
-			if (tempDegree < -75)
-				tempDegree = -75;
-			double tempBarrelY = tank.getBarrelWidth()* sin((tempDegree*pi) / -180);
-			double tempBarrelX = tank.getBarrelWidth()* cos((tempDegree*pi) / -180);
-			vector<double> inputs3{
-				tank.getBarrelX() + tempBarrelX ,
-				tank.getBarrelY() - tempBarrelY ,
-				(double)power,
-				((tempDegree*pi) / -180) ,
-				gravity,
-				(double)target.getX(),
-				(double)target.getY(),
-				targetHeight,
-				1600,
-				600
-			};
-			results.push_back(neuralNetwork.guessResult(inputs3));
-			cout << results[3] << endl;
-		    tempDegree = degree;
-			tempDegree += 5;
-			if (tempDegree > 0)
-				tempDegree = 0;
-			tempBarrelY = tank.getBarrelWidth()* sin((tempDegree*pi) / -180);
-			tempBarrelX = tank.getBarrelWidth()* cos((tempDegree*pi) / -180);
-			vector<double> inputs4{
-				tank.getBarrelX() + tempBarrelX ,
-				tank.getBarrelY() - tempBarrelY ,
-				(double)power,
-				((tempDegree*pi) / -180) ,
-				gravity,
-				(double)target.getX(),
-				(double)target.getY(),
-				targetHeight,
-				1600,
-				600
-			};
-			results.push_back(neuralNetwork.guessResult(inputs4));
-			cout << results[4] << endl;
-			int index = 0;
-			double max = 0.0;
-			for (int i = 0; i < results.size(); i++)
-			{
-				if (results[i] > max)
-				{
-					index = i;
-					max = results[i];
-				}
-			}
-			cout << "INDEKS " << index;
-			switch (index)
-			{
-			case 0:
-				cout << "CASE 1" << endl;
-				bullet.draw(tank.getBarrelX() + barrelX, tank.getBarrelY() - barrelY, velocity*power, ((degree*pi) / -180), gravity, &target);
-				break;
-			case 1:
-				power++;
-				cout << "CASE 2" << endl;
-				bullet.draw(tank.getBarrelX() + barrelX, tank.getBarrelY() - barrelY, velocity*power, ((degree*pi) / -180), gravity, &target);
-				break;
-			case 2:
-				power--;
-				cout << "CASE 3" << endl;
-				bullet.draw(tank.getBarrelX() + barrelX, tank.getBarrelY() - barrelY, velocity*power, ((degree*pi) / -180), gravity, &target);
-				break;
-			case 3:
-				degree -= 5;
-				barrelY = tank.getBarrelWidth()* sin((tempDegree*pi) / -180);
-				barrelX = tank.getBarrelWidth()* cos((tempDegree*pi) / -180);
-				cout << "CASE 4" << endl;
-				bullet.draw(tank.getBarrelX() + barrelX, tank.getBarrelY() - barrelY, velocity*power, ((degree*pi) / -180), gravity, &target);
-				break;
-			case 4:
-				degree += 5;
-				barrelY = tank.getBarrelWidth()* sin((tempDegree*pi) / -180);
-				barrelX = tank.getBarrelWidth()* cos((tempDegree*pi) / -180);
-				cout << "CASE 5" << endl;
-				bullet.draw(tank.getBarrelX() + barrelX, tank.getBarrelY() - barrelY, velocity*power, ((degree*pi) / -180), gravity, &target);
-				break;
-			default:
-				break;
-			}
-
+			neuralNetwork.printNeuralNetwork();
 		}
 
 		tank.setAngle((degree*pi)/180);//zamiana stopni na radiany 

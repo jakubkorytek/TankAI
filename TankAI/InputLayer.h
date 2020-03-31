@@ -32,7 +32,7 @@ inline vector<double> InputLayer::calculateLayerOutputData()
 {
 	for (int i = 0; i < this->inputValues.size();++i)
 	{
-		this->inputValues[i] = MathUtils::sigmoid(this->inputValues[i]);
+		this->inputValues[i] = this->inputValues[i] ;
 	}
 	return this->inputValues;
 }

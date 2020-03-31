@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	NeuralNetwork neuralNetwork(10, 5, 5, 1);
+	NeuralNetwork neuralNetwork(10, 2, 5, 1);
 	neuralNetwork.printNeuralNetwork();
 
 	Game game;

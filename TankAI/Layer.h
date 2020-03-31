@@ -47,6 +47,7 @@ inline Layer::~Layer()
 inline vector<double> Layer::calculateLayerOutputData(vector<double> layerInputs)
 {
 	vector<double> tempLayerOutputs;
+	this->layerInputs = layerInputs;
 	for (vector<Neuron>::iterator neuron = listOfNeurons.begin();neuron != listOfNeurons.end();neuron++)
 	{
 		double outputValue = MathUtils::sigmoid(neuron->calculateOutputValue(layerInputs));

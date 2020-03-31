@@ -25,9 +25,9 @@ bool Bullet::draw(int x, int y, float velocity, float angle, double gravity, Tar
 	int j = 0;
 	for (int i = x; i < 1600; i++)
 	{
-		
+
 		//obliczanie rzutu ukoœnego
- 		this->y =y - (j*tan(angle)) + (gravity*j*j )/(2 * velocity* velocity*cos(angle)*cos(angle));
+		this->y = y - (j*tan(angle)) + (gravity*j*j) / (2 * velocity* velocity*cos(angle)*cos(angle));
 		j++;
 		//rysowanie
 		al_draw_pixel(i, this->y, al_map_rgb(255, 255, 255));
@@ -41,8 +41,8 @@ bool Bullet::draw(int x, int y, float velocity, float angle, double gravity, Tar
 			score += 10;//zwiêkszam wynik
 			isHere = false;
 			break;
-		} 
-		else if (y < 0)
+		}
+		else if (y < 0 || y > 600 || i>1600)
 		{
 			isHere = false;
 			break;

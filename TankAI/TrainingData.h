@@ -7,6 +7,7 @@ using namespace std;
 class TrainingData
 {
 public:
+	TrainingData() {};
 	TrainingData(vector<double> inputs, double output);
 	~TrainingData();
 
