@@ -3,15 +3,17 @@
 #include <iostream>
 #include <ctime>
 #include <stdlib.h>
+#include "MathUtils.h"
 
 using namespace std;
 
 class Neuron
 {
 public:
-	Neuron(int numberOfConnections);
+	Neuron(int numberOfConnections, double bias);
 	~Neuron();
 
+	double bias;
 	double error;
 	double outputValue;
 	
@@ -24,13 +26,14 @@ private:
 
 };
 
-inline Neuron::Neuron(int numberOfConnections)
+inline Neuron::Neuron(int numberOfConnections, double bias)
 {
 	for (int i = 0; i < numberOfConnections; ++i)
 	{
 		weightsIn.push_back((double)rand() / (RAND_MAX));
 	}
-	error = 0;
+	this->error = 0;
+	this->bias = bias;
 }
 
 inline Neuron::~Neuron()
@@ -39,14 +42,14 @@ inline Neuron::~Neuron()
 
 inline double Neuron::calculateOutputValue(vector<double> inputs)
 {
-	double tempOutputValue = 0.0;
+	double tempOutputValue = this->bias;
 
 	for (int i = 0;i < inputs.size();++i)
 	{
 		tempOutputValue += inputs[i] * weightsIn[i];
 	}
 
-	this->outputValue = tempOutputValue;
+	this->outputValue = MathUtils::sigmoid(tempOutputValue);
 	return this->outputValue;
 }
 
@@ -56,4 +59,6 @@ inline void Neuron::printNeuron()
 	{
 		cout << "W" << i << " : " << weightsIn[i] << " ";
 	}
+	cout << endl;
+	cout << "Error : " << this->error << " OutputValue : " << this->outputValue << endl;
 }

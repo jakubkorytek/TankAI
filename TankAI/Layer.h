@@ -31,7 +31,7 @@ inline Layer::Layer(int numberOfNeuronsInLayer, int numberOfLayerInputs)
 
 	for (int i = 0;i < numberOfNeuronsInLayer;++i)
 	{
-		Neuron neuron(numberOfLayerInputs);
+		Neuron neuron(numberOfLayerInputs, bias);
 		this->listOfNeurons.push_back(neuron);
 	}
 }
@@ -49,7 +49,8 @@ inline vector<double> Layer::calculateLayerOutputData(vector<double> layerInputs
 	vector<double> tempLayerOutputs;
 	for (vector<Neuron>::iterator neuron = listOfNeurons.begin();neuron != listOfNeurons.end();neuron++)
 	{
-		double outputValue = MathUtils::sigmoid(neuron->calculateOutputValue(layerInputs) + bias);
+		double outputValue = MathUtils::sigmoid(neuron->calculateOutputValue(layerInputs));
+		neuron->outputValue = outputValue;
 		tempLayerOutputs.push_back(outputValue);
 	}
 	this->layerOutputs = tempLayerOutputs;

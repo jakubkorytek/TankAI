@@ -41,6 +41,11 @@ bool Bullet::draw(int x, int y, float velocity, float angle, double gravity, Tar
 			score += 10;//zwiêkszam wynik
 			isHere = false;
 			break;
+		} 
+		else if (y < 0)
+		{
+			isHere = false;
+			break;
 		}
 	}
 	isHere = false;

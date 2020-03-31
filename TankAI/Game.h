@@ -8,6 +8,7 @@
 #include "Tank.h"
 #include "Bullet.h"
 #include "NeuralNetwork.h"
+#include "TrainingData.h"
 
 #include <cmath>
 #include <string>
@@ -15,6 +16,9 @@
 class Game
 {
 private:
+	bool isNeuralNetworkReady = false;
+	vector<TrainingData> trainingDatas;
+	NeuralNetwork neuralNetwork;
 	ALLEGRO_DISPLAY *display;
 	float FPS = 10.0f;
 	bool done = false;
@@ -30,6 +34,7 @@ private:
 	float barrelX, barrelY;
 	float velocity = 20.0f;
 	double gravity = 9.81;
+	double targetHeight = 60;
 	int i;
 	Bullet bullet;
 	Target target;
@@ -51,6 +56,6 @@ public:
 	void update();
 	void draw();
 	void destroy();
-	void gameLoop();
+	void gameLoop(NeuralNetwork neuralNetwork);
 };
 
