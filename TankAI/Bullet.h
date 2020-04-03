@@ -3,22 +3,25 @@
 #include <allegro5/allegro_image.h>
 #include <cmath>
 #include "Target.h"
+#include "MathUtils.h"
+#include <vector>
 class Bullet
 {
 private:
 	int x, y;
-	double angle;
-	bool isHere;
 	int score;
+	double angle;
+	bool isMoving;
+	bool wasTargetHitted(int x, int y, Target *target);
+	bool isOutOfWindow(int x, int y, int width, int height);
 	
 
 public:
 	Bullet();
 	~Bullet();
-	bool draw(int x,int y, float velocity,float angle, double gravity, Target *target);
+	bool draw(int x,int startY,int width, int height, double power, float velocity, double degree, float angle, double gravity, Target *target);
 	void destroy();
-	bool hello();
+	bool isCreated();
 	int getScore();
-
 };
 

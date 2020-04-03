@@ -105,13 +105,26 @@ inline void NeuralNetwork::train(vector<TrainingData> trainingSet)
 	{
 		vector<double> outcome = feedForward(trainingSet[i].inputs);
 		backPropagate(trainingSet[i].output);
-		cout << "Expected : " << outcome[0] << endl;
-		cout << "Should be : " << trainingSet[i].output[0] << endl;
-		cout << "Error : " << trainingSet[i].output[0] - outcome[0] << endl;
-		cout << "Training in progress ... " << endl;
+		
+
+		cout << "Predicted Outcomes :" << endl;
+		for (int j = 0; j < outcome.size(); j++)
+		{
+			cout << j << " : " << outcome[j] << endl;
+		}
+		cout << "Proper Outcomes :" << endl;
+		for (int j = 0; j < outcome.size(); j++)
+		{
+			cout << j << " : " << trainingSet[i].output[j] << endl;
+		}
+
 		outcome = feedForward(trainingSet[i].inputs);
-		cout << "Expectation after training : " << outcome[0] << endl;
-		cout << "________________________________________________" << endl;
+
+		cout << "Predictions after training :" << endl;
+		for (int j = 0; j < outcome.size(); j++)
+		{
+			cout << j << " : " << outcome[j] << endl;
+		}
 	}
 }
 

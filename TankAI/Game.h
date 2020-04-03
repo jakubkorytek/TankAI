@@ -13,29 +13,39 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <algorithm>
+
+#define PI 3.14
 class Game
 {
 private:
 	bool isNeuralNetworkReady = false;
-	vector<TrainingData> trainingDatas;
 	NeuralNetwork neuralNetwork;
 	ALLEGRO_DISPLAY *display;
-	float FPS = 10.0f;
+	float FPS = 1.0f;
 	bool done = false;
 	ALLEGRO_KEYBOARD_STATE keyState;
 	ALLEGRO_TIMER *timer;
 	ALLEGRO_EVENT_QUEUE *queue;
 	InputManager input;
 	Tank tank;
-	const double pi = 3.14;
-	double degree;
+	int degree;
 	int y;
-	int power;
+	int power = 3;
 	float barrelX, barrelY;
-	float velocity = 20.0f;
+	float velocity = 10.0f;
 	double gravity = 9.81;
 	double targetHeight = 60;
+	int maxPower = 20;
+	int minPower = 1;
+	int powerStep = 1;
+	int maxAngle = 75;
+	int minAngle = 0;
+	int angleStep = 5;
+	int screenHeight = 600;
+	int screenWidth = 1000;
 	int i;
+	int gameScore = 0;
 	Bullet bullet;
 	Target target;
 	ALLEGRO_FONT *font;
@@ -48,6 +58,11 @@ private:
 	char bwidth[8];
 	char score[5];
 	char powLvl[3];
+	void aimHigher();
+	void aimLower();
+	void recalculateBarrelXY();
+	void shot();
+	vector<double> prepareInputsForNeuralNetwork();
 
 	
 public:

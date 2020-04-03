@@ -13,7 +13,7 @@ Target::~Target()
 
 void Target::createNew()
 {
-	x = 400 + rand() % 1200;//losowanie nowych wspó³rzêdnych
+	x = 400 + rand() % 600;//losowanie nowych wspó³rzêdnych
 	y = 500 - rand() % 500;
 }
 

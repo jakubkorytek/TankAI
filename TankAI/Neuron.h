@@ -16,6 +16,7 @@ public:
 	double error;
 	double gamma;
 	double outputValue;
+	double bias;
 	
 	vector<double> weightsIn;
 	vector<double> weightsDelta;
@@ -30,9 +31,10 @@ private:
 
 inline Neuron::Neuron(int numberOfConnections)
 {
+	bias = 1.0;
 	for (int i = 0; i < numberOfConnections; ++i)
 	{
-		weightsIn.push_back(((double)rand() / (RAND_MAX))-0.5);
+		weightsIn.push_back(((double)rand() / (RAND_MAX)));
 		weightsDelta.push_back(0);
 	}
 	this->error = 0;
@@ -50,7 +52,7 @@ inline double Neuron::calculateOutputValue(vector<double> inputs)
 	{
 		tempOutputValue += inputs[i] * weightsIn[i];
 	}
-	this->outputValue = tanh(tempOutputValue);
+	this->outputValue = MathUtils::sigmoid(tempOutputValue+bias);
 	return this->outputValue;
 }
 

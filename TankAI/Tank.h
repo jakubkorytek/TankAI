@@ -2,20 +2,21 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
+#include "MathUtils.h"
+
 class Tank
 {
 private:
 	int tankX, tankY;
-	int barrelX, barrelY;
-	float barrelAngle;
+	int barrelX = 50, barrelY = 530;
+	float barrelAngle = 0;
 	ALLEGRO_BITMAP *tank;
 	ALLEGRO_BITMAP *barrel;
 	ALLEGRO_DISPLAY *display;
 
 public:
 	Tank();
-	Tank(ALLEGRO_DISPLAY *display);
-	~Tank();
+	~Tank() {};
 	void setAngle(float angle);
 	float getAngle();
 	void draw();

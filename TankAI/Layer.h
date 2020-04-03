@@ -55,7 +55,7 @@ inline void Layer::backPropagateOutput(vector<double> expected)
 
 	for (int i = 0; i < listOfNeurons.size(); i++)
 	{
-		listOfNeurons[i].gamma = listOfNeurons[i].error * MathUtils::derivativeTanh(listOfNeurons[i].outputValue);
+		listOfNeurons[i].gamma = listOfNeurons[i].error * MathUtils::derivativeSigmoid(listOfNeurons[i].outputValue);
 	}
 
 	for (int i = 0; i < listOfNeurons.size(); i++)
@@ -63,6 +63,7 @@ inline void Layer::backPropagateOutput(vector<double> expected)
 		for (int j = 0; j < layerInputs.size(); j++)
 		{
 			listOfNeurons[i].weightsDelta[j] = listOfNeurons[i].gamma * layerInputs[j];
+			listOfNeurons[i].bias -= listOfNeurons[i].gamma;
 		}
 	}
 }
@@ -76,7 +77,7 @@ inline void Layer::backPropagateHidden(vector<Neuron> layerForward)
 		{
 			listOfNeurons[i].gamma += layerForward[j].gamma * layerForward[j].weightsIn[i];
 		}
-		listOfNeurons[i].gamma *= tanh(listOfNeurons[i].outputValue);
+		listOfNeurons[i].gamma *= MathUtils::derivativeSigmoid(listOfNeurons[i].outputValue);
 	}
 
 	for (int i = 0; i < listOfNeurons.size();i++)
@@ -84,6 +85,7 @@ inline void Layer::backPropagateHidden(vector<Neuron> layerForward)
 		for (int j = 0; j < layerInputs.size(); j++)
 		{
 			listOfNeurons[i].weightsDelta[j] = listOfNeurons[i].gamma * layerInputs[j];
+			listOfNeurons[i].bias -= listOfNeurons[i].gamma;
 		}
 	}
 }

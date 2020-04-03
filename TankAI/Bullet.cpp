@@ -1,14 +1,23 @@
 #include "Bullet.h"
 
+bool Bullet::wasTargetHitted(int x, int y, Target *target)
+{
+	int tX = target->getX();
+	int tY = target->getY();
+	int height = target->getHeight();
+	return	x == tX && y > tY && y < (tY + height);
+}
 
+bool Bullet::isOutOfWindow(int x, int y, int width, int height)
+{
+	return y > height || x > width;
+}
 
 Bullet::Bullet()
 {
 	al_init();
 	al_init_image_addon();
-	isHere = false;
-	score = 0;
-
+	isMoving = false;
 }
 
 
@@ -16,54 +25,50 @@ Bullet::~Bullet()
 {
 }
 
-bool Bullet::draw(int x, int y, float velocity, float angle, double gravity, Target *target)
+bool Bullet::draw(int x, int y, int width, int height, double power, float velocity,double degree, float angle, double gravity, Target *target)
 {
-	bool hitTheTarget = false;
-	isHere = true;//po naciœniêciu spacji pocisk staje siê aktywny
+	bool wasTargetReached = false;
+	isMoving = true;//po naciœniêciu spacji pocisk staje siê aktywny
 
-	//pêtla wyœwietlaj¹ca po pixelu trajektoriê lotu
 	int j = 0;
-	for (int i = x; i < 1600; i++)
+	for (int i = x; i < width; i++)
 	{
-
-		//obliczanie rzutu ukoœnego
-		this->y = y - (j*tan(angle)) + (gravity*j*j) / (2 * velocity* velocity*cos(angle)*cos(angle));
+		this->y = y - (j*tan(angle)) + (gravity*j*j) / (2 * (power*velocity)*(power*velocity)*cos(angle)*cos(angle));
 		j++;
-		//rysowanie
+
 		al_draw_pixel(i, this->y, al_map_rgb(255, 255, 255));
 		al_flip_display();
 
-		//wykrywanie kolizji
 		if (target->getX() == i && (target->getY() < this->y && (60 + target->getY()) > this->y))
 		{
-			hitTheTarget = true;
-			target->createNew();//po wykryciu kolizji generujê now¹ tarczê strzelnicz¹
-			score += 10;//zwiêkszam wynik
-			isHere = false;
+			isMoving = false;
+			wasTargetReached = true;
+			score += 10;
+			target->createNew();
 			break;
 		}
-		else if (y < 0 || y > 600 || i>1600)
+		else if (isOutOfWindow(i, this->y, width, height))
 		{
-			isHere = false;
+			isMoving = false;
 			break;
 		}
 	}
-	isHere = false;
+	isMoving = false;
 	
-	return hitTheTarget;
+	return wasTargetReached;
 }
 
 void Bullet::destroy()
 {
 }
 
-
-bool Bullet::hello()
+bool Bullet::isCreated()
 {
-	return this->isHere;
+	return this->isMoving;
 }
 
 int Bullet::getScore()
 {
 	return this->score;
 }
+

@@ -6,6 +6,7 @@ class Target
 {
 private:
 	int x, y;
+	int height = 50;
 public:
 	Target();
 	~Target();
@@ -13,5 +14,6 @@ public:
 	void draw();
 	int getX();
 	int getY();
+	int getHeight() { return height; };
 };
 
